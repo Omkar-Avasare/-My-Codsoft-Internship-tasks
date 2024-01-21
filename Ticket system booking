@@ -1,0 +1,147 @@
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <limits>
+
+using namespace std;
+
+// Constants
+const int NUM_ROWS = 5;
+const int NUM_COLS = 10;
+const double TICKET_PRICE = 200;
+
+// Function prototypes
+void displayMovies();
+void displaySeatingPlan(const vector<vector<char>>& seats);
+void bookTickets(vector<vector<char>>& seats);
+
+int main() {
+    // Presenting the latest movie listings
+    displayMovies();
+
+    // Setting up the seating arrangement
+    vector<vector<char>> seats(NUM_ROWS, vector<char>(NUM_COLS, 'O')); // 'O' indicates an available seat
+
+    // Displaying the initial seating plan
+    displaySeatingPlan(seats);
+
+    // Facilitating the ticket booking process
+    bookTickets(seats);
+
+    return 0;
+}
+
+// Displaying the current movie listings
+void displayMovies() {
+    cout << "Now Showing:" << endl;
+    cout << "1. Hanuman" << endl;
+    cout << "2. Animal" << endl;
+    cout << "3. Mission Mangal" << endl;
+    cout << endl;
+}
+
+// Displaying the current seating plan
+void displaySeatingPlan(const vector<vector<char>>& seats) {
+    cout << "Seating Plan:" << endl;
+    cout << "   ";
+    for (int i = 1; i <= NUM_COLS; ++i) {
+        cout << setw(3) << i;
+    }
+    cout << endl;
+
+    for (int i = 0; i < NUM_ROWS; ++i) {
+        cout << setw(2) << char('A' + i) << " ";
+        for (int j = 0; j < NUM_COLS; ++j) {
+            cout << setw(3) << seats[i][j];
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+// Handling the ticket booking process for any number of seats
+void bookTickets(vector<vector<char>>& seats) {
+    int numTickets;
+    int movieChoice;
+
+    cout << "Enter the number of tickets to book: ";
+    cin >> numTickets;
+
+    // Validating the input
+    if (numTickets <= 0) {
+        cerr << "Invalid number of tickets. Please enter a positive number." << endl;
+        return;
+    }
+
+    // Displaying the movie menu
+    displayMovies();
+
+    // Movie selection using switch-case
+    cout << "Enter the number of the movie you wish to see: ";
+    cin >> movieChoice;
+
+    // Validating the movie choice
+    if (movieChoice < 1 || movieChoice > 3) {
+        cerr << "Invalid movie selection. Please try again." << endl;
+        return;
+    }
+
+    string movieSelection;
+    switch (movieChoice) {
+        case 1:
+            movieSelection = "Hanuman";
+            break;
+        case 2:
+            movieSelection = "Animal";
+            break;
+        case 3:
+            movieSelection = "Mission Mangal";
+            break;
+        default:
+            cerr << "Invalid movie selection. Please try again." << endl;
+            return;
+    }
+
+    // Loop to reserve seats based on the number of tickets
+    const int MAX_ATTEMPTS = 3;  // Maximum attempts for seat selection
+    for (int i = 0; i < numTickets; ++i) {
+        int attempts = 0;
+        char row;
+        int col;
+
+        do {
+            if (attempts > 0) {
+                cerr << "Invalid seat selection. Please try again." << endl;
+            }
+
+            cout << "Enter the row (A-E) and column (1-10) for seat " << i + 1 << ": ";
+            cin >> row >> col;
+
+            // Validating the input
+            if (row < 'A' || row > 'E' || col < 1 || col > NUM_COLS || seats[row - 'A'][col - 1] == 'X') {
+                ++attempts;
+            } else {
+                break;
+            }
+
+        } while (attempts < MAX_ATTEMPTS);
+
+        // Check if the maximum attempts are reached
+        if (attempts == MAX_ATTEMPTS) {
+            cerr << "Maximum attempts reached. Booking canceled." << endl;
+            return;
+        }
+
+        // Booking the selected seat
+        seats[row - 'A'][col - 1] = 'X'; // 'X' represents a booked seat
+    }
+
+    // Displaying the updated seating plan
+    displaySeatingPlan(seats);
+
+    // Displaying booking details
+    cout << "Booking successful!" << endl;
+    cout << "Movie Selected: " << movieSelection << endl;
+    cout << "Number of tickets: " << numTickets << endl;
+    cout << "Total cost: ₹" << fixed << setprecision(2) << numTickets * TICKET_PRICE << endl;
+}
