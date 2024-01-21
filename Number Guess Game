@@ -1,0 +1,24 @@
+
+#include<iostream>
+using namespace std ;
+int main ()
+{
+    int gn ; //for guessing number 
+cout<<"Random Number Guessing Game\n";
+int rn=rand()%100+1;
+cout<<"Enter any Number Between 1 to 100";
+cin>>gn;
+if val(rn)=val(gn){
+
+cout<<"Congratulations! You seem a Pro!\n You Guessed the right number!!";
+}
+else if val (rn)<val(gn);
+{
+    cout<<"You guessed a number shorter than the random number";
+}
+else val (rn)>val(gn);
+{
+    cout<<"You guessed a little bigger number...Don't worry play again :)";
+}
+return 0;
+}
