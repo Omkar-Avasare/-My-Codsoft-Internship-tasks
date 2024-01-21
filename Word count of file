@@ -1,0 +1,47 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+
+using namespace std;
+
+int countWords(const string& text) {
+    stringstream ss(text);
+    string word;
+    int count = 0;
+
+    while (ss >> word) {
+        count++;
+    }
+
+    return count;
+}
+
+int main() {
+    string fileName;
+
+    // Get the file name from the user
+    cout << "Enter the name of the text file: ";
+    cin >> fileName;
+
+    ifstream file(fileName);
+
+    // Check if the file is opened successfully
+    if (!file.is_open()) {
+        cerr << "Error opening file. Make sure the file exists and try again." << endl;
+        return 1; // Return an error code
+    }
+
+    stringstream buffer;
+    buffer << file.rdbuf();
+    string fileContent = buffer.str();
+
+    // Count the number of words
+    int wordCount = countWords(fileContent);
+
+    cout << "Total number of words in the file: " << wordCount << endl;
+
+    file.close();
+
+    return 0;
+}
